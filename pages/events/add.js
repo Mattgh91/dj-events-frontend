@@ -1,9 +1,9 @@
-import styles from '../../styles/Home.module.css'
+import Layout from '../../components/Layout';
 
 export default function AddEventsPage() {
     return (
-        <div className={styles.container}>
+        <Layout>
             <p>Add an event</p>
-        </div>
+        </Layout>
     )
 }
