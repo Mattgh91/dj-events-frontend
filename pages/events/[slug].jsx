@@ -19,6 +19,7 @@ export default function EventPage({
     theEvent,
 }) {
     const deleteEvent = () => console.log('delete');
+    console.log({ theEvent });
 
     return (
         <Layout>
@@ -30,11 +31,11 @@ export default function EventPage({
                     <a href="#" className={styles.delete} onClick={deleteEvent}>Delete event <FaTimes /></a>
                 </div>
 
-                <span>{date} at {time}</span>
+                <span>{new Date(date).toLocaleDateString('en-GB')} at {time}</span>
                 <h1>{name}</h1>
-                {theEvent.image && (
+                {theEvent.image?.data?.attributes && (
                     <div className={styles.image}>
-                        <Image src={theEvent.image} width={960} height={600} />
+                        <Image src={theEvent.image.data.attributes.formats.large.url} width={960} height={600} />
                     </div>
                 )}
 
@@ -43,21 +44,23 @@ export default function EventPage({
                 <h3>Venue: {venue}</h3>
                 <p>{address}</p>
 
+                <p>{description}</p>
+
                 <Link href="/events">
-                        <a className={styles.back}>{`<`} Back</a>
-                    </Link>
+                    <a className={styles.back}>{`<`} Back</a>
+                </Link>
             </div>
         </Layout>
     )
 }
 
 export async function getStaticPaths() {
-    const res = await fetch(`${API_URL}/api/events/`);
+    const res = await fetch(`${API_URL}/api/events?[populate]=*`);
     const events = await res.json();
 
-    const paths = events.map(evt => ({
+    const paths = events.data.map(evt => ({
         params: {
-            slug: evt.slug,
+            slug: evt.attributes.slug,
         }
     }));
 
@@ -70,12 +73,11 @@ export async function getStaticPaths() {
 export async function getStaticProps({
     params: { slug }
 }) {
-    console.log({ slug });
-    const res = await fetch(`${API_URL}/api/events/${slug}`);
+    const res = await fetch(`${API_URL}/api/events?[populate]=*&slug=${slug}`);
     const theEvent = await res.json();
 
     return {
-        props: { theEvent: theEvent[0] },
+        props: { theEvent: theEvent.data[0].attributes },
         revalidate: 1,
     }
 }

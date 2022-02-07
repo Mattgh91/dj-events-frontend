@@ -12,15 +12,23 @@ export default function EventItem({
     },
     event,
 }) {
+    console.log({ event });
     return (
         <div className={styles.event}>
             <div className={styles.img}>
-                <Image src={event.image ? event.image : '/images/event-default.png'} width={170} height={100} />
+                <Image
+                    src={event.image?.data?.attributes.formats.thumbnail.url
+                        ? event.image?.data?.attributes.formats.thumbnail.url
+                        : '/images/event-default.png'
+                    }
+                    width={170}
+                    height={100}
+                />
             </div>
 
             <div className={styles.info}>
                 <span>
-                    {date} at {time}
+                    {new Date(date).toLocaleDateString('en-GB')} at {time}
                 </span>
 
                 <h3>{name}</h3>

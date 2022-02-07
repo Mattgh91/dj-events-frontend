@@ -11,7 +11,7 @@ export default function Home({ events }) {
             {events.length === 0 && <h2>No events to show</h2>}
 
             {events.map(evt => (
-                <EventItem event={evt} key={evt.id} />
+                <EventItem event={evt.attributes} key={evt.id} />
             ))}
 
             {events.length > 0 && (
@@ -24,11 +24,11 @@ export default function Home({ events }) {
 }
 
 export async function getStaticProps() {
-    const res = await fetch(`${API_URL}/api/events`);
+    const res = await fetch(`${API_URL}/api/events?_sort=date:ASC&_limit=3&[populate]=*`);
     const events = await res.json();
 
     return {
-        props: { events: events.slice(0, 3) },
+        props: { events: events.data },
         revalidate: 1, // tries to find if events have changed to save using getServerSideProps
     };
 }
