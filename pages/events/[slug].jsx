@@ -19,7 +19,6 @@ export default function EventPage({
     theEvent,
 }) {
     const deleteEvent = () => console.log('delete');
-    console.log({ theEvent });
 
     return (
         <Layout>
@@ -60,7 +59,7 @@ export async function getStaticPaths() {
 
     const paths = events.data.map(evt => ({
         params: {
-            slug: evt.attributes.slug,
+            slug: evt.attributes.slug
         }
     }));
 
@@ -75,9 +74,10 @@ export async function getStaticProps({
 }) {
     const res = await fetch(`${API_URL}/api/events?[populate]=*&slug=${slug}`);
     const theEvent = await res.json();
+    const findTheEvent = theEvent.data.filter(evt => evt.attributes.slug === slug);
 
     return {
-        props: { theEvent: theEvent.data[0].attributes },
+        props: { theEvent: findTheEvent[0].attributes },
         revalidate: 1,
     }
 }
