@@ -12,7 +12,6 @@ export default function EventItem({
     },
     event,
 }) {
-    console.log({ event });
     return (
         <div className={styles.event}>
             <div className={styles.img}>

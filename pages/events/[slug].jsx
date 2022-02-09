@@ -1,5 +1,7 @@
 import Layout from '@/components/Layout';
 import { API_URL } from '@/config/index';
+import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
 import styles from '@/styles/Event.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,18 +9,36 @@ import { FaPencilAlt, FaTimes } from 'react-icons/fa';
 
 export default function EventPage({
     theEvent: {
-        name,
         id,
-        date,
-        time,
-        performers,
-        description,
-        venue,
-        address,
+        attributes: {
+            name,
+            date,
+            time,
+            performers,
+            description,
+            venue,
+            address,
+        },
     },
     theEvent,
 }) {
-    const deleteEvent = () => console.log('delete');
+    const router = useRouter();
+
+    const deleteEvent = async () => {
+        if (confirm('Are you sure?')) {
+            const res = await fetch(`${API_URL}/api/events/${id}`, {
+                method: 'DELETE',
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.message)
+            } else {
+                router.push('/events');
+            }
+        }
+    };
 
     return (
         <Layout>
@@ -32,6 +52,8 @@ export default function EventPage({
 
                 <span>{new Date(date).toLocaleDateString('en-GB')} at {time}</span>
                 <h1>{name}</h1>
+                <ToastContainer />
+
                 {theEvent.image?.data?.attributes && (
                     <div className={styles.image}>
                         <Image src={theEvent.image.data.attributes.formats.large.url} width={960} height={600} />
@@ -82,7 +104,7 @@ export async function getStaticProps({
     const findTheEvent = theEvent.data.filter(evt => evt.attributes.slug === slug);
 
     return {
-        props: { theEvent: findTheEvent[0].attributes },
+        props: { theEvent: findTheEvent[0] },
         revalidate: 1,
     }
 }
