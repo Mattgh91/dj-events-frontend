@@ -17,6 +17,10 @@ export default function LoginPage() {
         login({ email, password });
     }
 
+    React.useEffect(() => {
+        error && toast.error(error);
+    }, [error]);
+
     return (
         <Layout title="User Login">
             <div className={styles.auth}>
