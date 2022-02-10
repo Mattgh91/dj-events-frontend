@@ -26,8 +26,6 @@ export async function getServerSideProps({ query: { page = 1 } }) {
     const res = await fetch(`${API_URL}/api/events?pagination[start]=${start}&pagination[limit]=${PER_PAGE}&pagination[withCount]=true&[populate]=*`);
     const events = await res.json();
 
-    console.log({ events });
-
     return {
         props: {
             events: events.data,

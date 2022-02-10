@@ -18,8 +18,6 @@ export default async (req, res) => {
 
         const data = await strapiRes.json();
 
-        console.log('data: ', data);
-
         if (strapiRes.ok) {
             // @todo - Set cookie
             res.setHeader(

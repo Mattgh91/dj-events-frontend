@@ -197,8 +197,6 @@ export async function getServerSideProps({
     const res = await fetch(`${API_URL}/api/events/${id}?[populate]=*`);
     const evt = await res.json();
 
-    console.log(req.headers.cookie);
-
     return {
         props: {
             evt: evt.data
