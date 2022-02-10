@@ -14,6 +14,11 @@ export default function RegisterPage() {
     const [passwordConfirm, setPasswordConfirm] = React.useState('');
     const { register, error, } = React.useContext(AuthContext);
 
+    React.useEffect(() => {
+        error && toast.error(error);
+        console.log(error);
+    }, [error]);
+
     const handleSubmit = e => {
         e.preventDefault();
 
@@ -68,7 +73,7 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    <input type='submit' value='Login' className='btn' />
+                    <input type='submit' value='Register' className='btn' />
                 </form>
 
                 <p>
