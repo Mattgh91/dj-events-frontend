@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useRouter } from 'next/router';
 import { NEXT_URL } from '@/config/index';
 
 const AuthContext = React.createContext();
@@ -7,7 +6,9 @@ const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = React.useState(null);
     const [error, setError] = React.useState(null);
-    // React.useEffect;
+    
+
+    React.useEffect(() => checkUserLoggedIn(), []);
 
     // Register user
     const register = async ({ username, email, password }) => {
@@ -16,7 +17,6 @@ export const AuthProvider = ({ children }) => {
 
     // Login user
     const login = async ({ email: identifier, password }) => {
-        console.log({ identifier, password });
         const res = await fetch(`${NEXT_URL}/api/login`, {
             method: 'POST',
             headers: {
@@ -31,10 +31,8 @@ export const AuthProvider = ({ children }) => {
         const data = await res.json();
 
         if (res.ok) {
-            console.log('ok: ', data);
             setUser(data.user);
         } else {
-            console.log('bad: ', data);
             setError(data.message);
             setError(null);
         }
@@ -46,8 +44,17 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Check if user is logged in
-    const checkUserLoggedIn = async ({ username, email, password }) => {
+    const checkUserLoggedIn = async () => {
         console.log('check');
+        const res = await fetch(`${NEXT_URL}/api/user`);
+        const data = await res.json();
+
+        console.log({ data });
+        if (res.ok) {
+            setUser(data.user)
+        } else {
+            setUser(null);
+        }
     }
 
     return (
