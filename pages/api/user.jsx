@@ -1,10 +1,7 @@
-import * as React from 'react';
 import cookie from 'cookie';
-import { useRouter } from 'next/router';
 import { API_URL } from '@/config/index';
 
 export default async (req, res) => {
-    const router = useRouter();
 
     if (req.method === 'GET') {
         if (!req.headers.cookie) {
@@ -27,7 +24,6 @@ export default async (req, res) => {
 
         if (strapiRes.ok) {
             res.status(200).json({ user });
-            router.push(`/account/dashboard`);
         } else {
             res.status(403).json({ message: 'User forbidden' });
         }
