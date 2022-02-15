@@ -18,7 +18,7 @@ export default function DashboardPage({ events }) {
                 <h1>Dashboard</h1>
                 <h3>My events</h3>
 
-                {events.map(evt => (
+                {events && events.map(evt => (
                     <DashboardEvent key={evt.id} evt={evt} handleDelete={deleteEvent} />
                 ))}
             </div>
