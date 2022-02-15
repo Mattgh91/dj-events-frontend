@@ -40,7 +40,7 @@ export async function getServerSideProps({ req }) {
 
     return {
         props: {
-            events,
+            events: events.data,
         }
     }
 }
