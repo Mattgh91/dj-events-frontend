@@ -75,36 +75,14 @@ export default function EventPage({
     )
 }
 
-export async function getStaticPaths() {
-    const res = await fetch(`${API_URL}/api/events?[populate]=*`);
-    const events = await res.json();
-
-    const paths = events.data.map(evt => ({
-        params: {
-            slug: evt.attributes.slug
-        }
-    }));
-
-    return {
-        paths,
-        fallback: false,
-    }
-}
-
-export async function getStaticProps({
+export async function getServerSideProps({
     params: { slug }
 }) {
-    // Not sure this is done the proper way...
-    // https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest-api.html#get-an-entry 
-    // Strapi API provides that you can pass in the event ID...
-    // the slug being passed in here does nothing, this is old v3 API as per the course...
-    const res = await fetch(`${API_URL}/api/events?[populate]=*&slug=${slug}`);
-    const theEvent = await res.json();
-    // maybe a hacky solution here... but works...
-    const findTheEvent = theEvent.data.filter(evt => evt.attributes.slug === slug);
+    const res = await fetch(`${API_URL}/api/events?&[populate]=*`);
+    const events = await res.json();
+    const findTheEvent = events.data.filter(evt => evt.attributes.slug === slug);
 
     return {
         props: { theEvent: findTheEvent[0] },
-        revalidate: 1,
     }
-}
+};
